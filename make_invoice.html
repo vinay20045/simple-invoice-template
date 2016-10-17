@@ -299,7 +299,7 @@
                 $$('invoice_date').value = now.toDateString();
                 
                 //set invoice number
-                invoice_number = '' + now.getFullYear() + now.mm + now.dd + hour + '-' + now.getMinutes();
+                invoice_number = '' + now.getFullYear() + now.mm + now.dd + now.hh + '-' + now.getMinutes();
                 $$('invoice_number').value = invoice_number;
 
                 //bind add_item_button
