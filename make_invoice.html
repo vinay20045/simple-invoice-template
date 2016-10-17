@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Free Invoice Generator</title>
+        <meta name="description" content="Use this simple, page saving invoice template to create beautiful invoices online or offline. Layout Optimized for print &amp; pdf">
+
+        <style>
+            @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,800,300italic,400italic,600italic);
+            body{font-family:'Courier', 'Open Sans', 'Trebuchet MS', 'Lucida Sans Unicode';color:#4F5155;font-size:11px;}
+            table{text-align:justify;}
+            input{padding:3px;margin:3px;width:45%;}
+            .input_large{width:94%;}
+            .input_small{width:20%}
+            #invoice_pane{position:fixed;top:0;left:0;width:750px;height:100%;}
+            #settings_pane{position:absolute;top:0;left:770px;width:calc(98% - 770px);height:auto;border-left:2px solid #d8d8d8;font-size: 12px;padding:5px;}
+            #page_end_msg{position:absolute;bottom:20px;left:210px;width:300px;height:auto;background-color:rgba(18,18,18,0.85);border-radius:25px;padding:15px;font-size:12px;}
+            #page_end_msg .heading{display:block;color:#fff;padding-bottom:5px;font-weight:600;}
+            #page_end_msg .text{display:block;color:#999;}
+            #page_end_msg .links{display:block;color:#fff;padding-top:5px;}
+            #page_end_msg .links a{color:#fff;}
+            @media print{.do_not_print {display:none;}}
+        </style>
+    </head>
+    <body>
+        <div id="invoice_pane">
+            <center>
+            <br>
+            <table width="650" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="left" valign="top" width="55%">
+                        <span id="customer_details">
+                            <i><small>Invoiced To</small></i><br>
+                            <big><b><span id="customer_name_D"></span></b><br><span id="customer_company_D"></span></big><br>
+                            <span id="customer_address_D"></span><br>
+                            <span id="customer_city_D"></span>, <span id="customer_state_D"></span><br>
+                            <span id="customer_zip_id_D"></span>: <span id="customer_zip_value_D"></span><br>
+                            <b><span id="customer_id_D"></span>: <span id="customer_id_value_D"></span></b>
+                            <br><span id="customer_cid_D"></span> <span id="customer_cid_value_D"></span>
+                        </span>
+                    </td>
+                    <td align="right">
+                        <b><big><span id="vendor_name_D"></span></big></b><br>
+                        <span id="vendor_address_D"></span><br><span id="vendor_city_D"></span>, <span id="vendor_state_D"></span><br>
+                        <span id="vendor_zip_id_D"></span>: <span id="vendor_zip_value_D"></span><br>
+                        <span id="vendor_phone_D"></span><br>
+                        <u><span id="vendor_email_D"></span></u> | <u><span id="vendor_website_D"></span></u><br>
+                        <span id="vendor_cid_D"></span> <span id="vendor_cid_value_D"></span>
+                    </td>
+                </tr>
+            </table>
+            <hr>
+            <table width="650" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td align="left">
+                        <b><span id="invoice_info_D"></span></b>
+                    </td>
+                    <td align="right" valign="top">
+                        Date: <span id="invoice_date_D"></span><br>
+                        <b>Invoice #: <span id="invoice_number_D"></span></b>
+                    </td>
+                </tr>
+            </table>
+            <table width="650" border="1" cellspacing="0" cellpadding="0">
+                <td valign="top" align="left" width="65%">
+                    <table border="1" width="100%" cellspacing="0" cellpadding="0">
+                        <tbody id="order_items_D">
+                            <tr align="center">
+                                <th>Sl.</th>
+                                <th>Description</th>
+                                <th>Unit Rate</th>
+                                <th>Units</th>
+                                <th>Cost</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+                <td align="center">
+                    <table width="85%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td align="left" width="50%"><b>Total Units</b></td>
+                            <td align="left" width="5%">:</td>
+                            <td align="left"><b><span id="total_units_D"></b></td>
+                        </tr>
+                        <tr><td colspan="3">&nbsp;</td></tr>
+                        <tr>
+                            <td align="left"><b>Sub Total</b>(+)</td>
+                            <td align="left">:</td>
+                            <td align="left"><b><span id="sub_total_D"></span></b></td>
+                        </tr>
+                        <tr id="tax_row">
+                            <td align="left">Tax@<span id="tax_rate_D"></span>%(+)</td>
+                            <td align="left">:</td>
+                            <td align="left"><span id="tax_amount_D"></span></td>
+                        </tr>
+                        <tr>
+                            <td align="left">Others(+)</td>
+                            <td align="left">:</td>
+                            <td align="left"><span id="other_charges_D"></span></td>
+                        </tr>
+                        <tr>
+                            <td align="left">Discount(-)</td>
+                            <td align="left">:</td>
+                            <td align="left"><span id="discount_D"></span></td>
+                        </tr>
+                        <tr><td colspan="3">&nbsp;</td></tr>
+                        <tr>
+                            <td align="left"><b>GRAND TOTAL</b>(=)</td>
+                            <td align="left">:</td>
+                            <td align="left"><b><big><span id="currency_D"></span><span id="grand_total_D"></span></big></b></td>
+                        </tr>
+                    </table>
+                </td>
+            </table>
+            <br>
+            <span id="final_note_D"></span><br>
+            <svg id="bar_code_container"></svg>
+            <span class="do_not_print">
+                <br><br><br><button onclick="javascript: window.print();">Print Invoice</button>
+            </span>
+            <div id="page_end_msg" class="do_not_print">
+                <span class="heading">Know your customers better!</span>
+                <span class="text">Use your invoice data to know more about your customers. Zero effort integration.</span>
+                <span class="links"><a target="_BLANK" href="https://16Metrics.com">Find out more on 16Metrics.com</a></span>
+            </div>
+            </center>
+        </div>
+
+        <div id="settings_pane" class="do_not_print">
+            <center><big><b>Invoice Generator</b></big><br>Change details below &amp; check left pane for updates as you type</center><br><br>
+            <b>CUSTOMER INFO</b><br>
+            <input type="text" id="customer_name" placeholder="Customer Name" value="Jared Dunn">
+            <input type="text" id="customer_company" placeholder="Customer Company Name" value="Pied Piper, Inc.">
+            <input class="input_large" type="text" id="customer_address" placeholder="Address Line 1" value="5230 Newell Road,">
+            <input type="text" id="customer_city" placeholder="City Name" value="Palo Alto">
+            <input type="text" id="customer_state" placeholder="State and Country Details" value="California, US of A">
+            <input type="text" id="customer_zip_id" placeholder="Area Code Field Identifier" value="ZIP">
+            <input type="text" id="customer_zip_value" placeholder="Actual Area Code" value="94301">
+            <input type="text" id="customer_id" placeholder="Email/Phone Field Identifier" value="Email">
+            <input type="text" id="customer_id_value" placeholder="Email Address/Phone Number" value="dunn_jared@piedpiper.com">
+            <input type="text" id="customer_cid" placeholder="Company Number Field Identifier" value="EIN:">
+            <input type="text" id="customer_cid_value" placeholder="EIN/GST/CIN/VAT/TIN Number" value="29940383607"><br><br>
+            <b>VENDOR INFO</b><br>
+            <input class="input_large" type="text" id="vendor_name" placeholder="Vendor Company Name" value="Acme, Inc.">
+            <input class="input_large" type="text" id="vendor_address" placeholder="Address Line 1" value="9588 Anderson Avenue,">
+            <input type="text" id="vendor_city" placeholder="City Name" value="Morton Grove">
+            <input type="text" id="vendor_state" placeholder="State and Country Details" value="Illinois, US of A">
+            <input type="text" id="vendor_zip_id" placeholder="Area Code Field Identifier" value="ZIP">
+            <input type="text" id="vendor_zip_value" placeholder="Actual Area Code" value="60053">
+            <input class="input_large" type="text" id="vendor_phone" placeholder="Support Phone Number" value="+1-202-555-0163">
+            <input type="text" id="vendor_email" placeholder="Support Email Address" value="support@example.com">
+            <input type="text" id="vendor_website" placeholder="Website Address" value="www.example.com">
+            <input type="text" id="vendor_cid" placeholder="Company Number Field Identifier" value="GST:">
+            <input type="text" id="vendor_cid_value" placeholder="EIN/GST/CIN/VAT/TIN Number" value="2979161654807"><br><br>
+            <b>INVOICE INFO</b><br>
+            <input class="input_large" type="text" id="invoice_info" placeholder="Any Instructions or Information" value="HOME DELIVERY | PREPAID">
+            <input type="text" id="invoice_date" placeholder="Enter Date Manually"> default: Today's date<br>
+            <input type="text" id="invoice_number" placeholder="Enter Invoice # Manually"> default: YYYYMMDDHH-minute<br>
+            <input type="text" id="tax_rate" placeholder="% Tax on Sub Total" value="5.5"> Tax Rate: Leave Blank to Remove<br>
+            <input type="text" id="currency" placeholder="Currency Symbol"><br>
+            <input type="text" id="other_charges" placeholder="Other Charges" value="1"> Other Charges<br>
+            <input type="text" id="discount" placeholder="Discount Amount" value="1"> Discount Amount<br>
+            <input class="input_large" type="text" id="final_note" placeholder="Final Note" value="This is a computer generated invoice and needs no signature"><br><br>
+            <b>ITEMS</b>&nbsp;&nbsp;&nbsp;&nbsp;<span id="add_new_item_button"><u>Add Another Item</u></span><br>
+            <span id="order_items"></span><br><br>
+        </div>
+
+        <script src="https://cdn.jsdelivr.net/jsbarcode/3.3.7/barcodes/JsBarcode.code128.min.js"></script>
+
+        <script type="text/javascript">
+            var sl = 0;
+
+            //get element by id alias
+            var $$ = function(id){
+                return document.getElementById(id);
+            }
+
+            var bind = function(src, dest, e){
+                try{
+                    $$(dest).innerHTML = src.value;
+                }
+                catch(e){
+                    console.log(e, src, dest);
+                }
+                src.addEventListener(e, function(){
+                    try{
+                        $$(dest).innerHTML = src.value;
+                    }catch(e){};
+                });
+            };
+
+            var register = function(ele, e, func){
+                $$(ele).addEventListener(e,function(){window[func]();});
+            }
+
+            function bind_all_text_boxes(){
+                var items = document.getElementsByTagName('INPUT');
+                for(var i = items.length - 1; i >= 0; i--){
+                    var item = items[i];
+                    var destination_field = item.id + '_D';
+                    bind(item, destination_field, 'keyup');
+                }
+            }
+
+            function add_line_item_binds(){
+                for (var i=1; i<=sl; i++){
+                    register('item_rate_'+i, 'keyup', 'update_totals');
+                    register('item_units_'+i, 'keyup', 'update_totals');
+                }
+            }
+
+            function update_totals(){
+                total_no_of_units = 0;
+                sub_total = 0;
+                grand_total = 0;
+                for (var i=1; i<=sl; i++){
+                    var no_of_units = parseFloat($$('item_units_'+i).value);
+                    var unit_rate = parseFloat($$('item_rate_'+i).value);
+                    var cost = no_of_units * unit_rate;
+
+                    $$('item_total_'+i+'_D').innerHTML = cost;
+
+                    total_no_of_units = total_no_of_units + no_of_units;
+                    sub_total = sub_total + cost;
+                }
+
+                $$('total_units_D').innerHTML = total_no_of_units;
+                $$('sub_total_D').innerHTML = sub_total;
+
+                grand_total = sub_total + tax_amount + parseFloat($$('other_charges').value) - parseFloat($$('discount').value);
+                $$('grand_total_D').innerHTML = grand_total;
+            }
+
+            function observe_tax_changes(){
+                if($$('tax_rate').value){
+                    if($$('tax_row').innerHTML == ''){
+                        $$('tax_row').innerHTML = '<td align="left">Tax@<span id="tax_rate_D"></span>% (+)</td><td align="left">:</td><td align="left"><span id="currency_D">$ </span></span><span id="tax_amount_D"></span></td>';
+                    }
+                    tax_amount = sub_total * parseFloat($$('tax_rate').value) / 100;
+                    $$('tax_amount_D').innerHTML = tax_amount;
+                }
+                else{
+                    tax_amount = 0;
+                    $$('tax_row').innerHTML = '';
+                }
+                update_totals();
+            }
+
+            function add_a_line_item(){
+                var order_items = $$('order_items');
+                var order_items_D = $$('order_items_D');
+
+                sl = sl + 1;
+                var input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'item_desc_'+sl;
+                input.placeholder = 'Description';
+                input.value = 'An awesome item';
+                order_items.appendChild(input);
+
+                input = document.createElement('input');
+                input.type = 'text';
+                input.classList = ['input_small'];
+                input.id = 'item_rate_'+sl;
+                input.min = 1;
+                input.placeholder = 'Rate per Unit';
+                input.value = '65';
+                order_items.appendChild(input);
+
+                input = document.createElement('input');
+                input.type = 'text';
+                input.classList = ['input_small'];
+                input.id = 'item_units_'+sl;
+                input.min = 1;
+                input.placeholder = 'No. of Units';
+                input.value = '2';
+                order_items.appendChild(input);
+
+                order_items_D.innerHTML = order_items_D.innerHTML + '<tr align="center"><td id="item_sl_'+sl+'_D">'+sl+'</td><td id="item_desc_'+sl+'_D"></td><td id="item_rate_'+sl+'_D"></td><td id="item_units_'+sl+'_D"></td><td id="item_total_'+sl+'_D"></td></tr>';
+
+                bind_all_text_boxes();
+                update_totals();
+                add_line_item_binds();
+            }
+
+            function set_defaults(){
+                var now = new Date();
+
+                //set date
+                var month = now.getMonth();
+                var date = now.getDate();
+                var hour = now.getHours();
+                now.mm = month<10 ? '0'+month : month;
+                now.dd = date<10 ? '0'+date : date;
+                now.hh = hour<10 ? '0'+hour : hour;
+                $$('invoice_date').value = now.toDateString();
+                
+                //set invoice number
+                invoice_number = '' + now.getFullYear() + now.mm + now.dd + hour + '-' + now.getMinutes();
+                $$('invoice_number').value = invoice_number;
+
+                //bind add_item_button
+                register('add_new_item_button', 'click', 'add_a_line_item');
+
+                //bind tax_rate observer
+                tax_amount = 0;
+                register('tax_rate', 'keyup', 'observe_tax_changes');
+
+                //bind other charges and discount to update totals
+                register('other_charges', 'keyup', 'update_totals');
+                register('discount', 'keyup', 'update_totals');
+            }
+
+            set_defaults();
+            add_a_line_item(); //binding of text boxes happens inside this func
+            observe_tax_changes();
+            update_totals();
+
+            JsBarcode("#bar_code_container", invoice_number, {
+                height: 40,
+                displayValue: false
+            });
+        </script>
+    </body>
+</html>
